@@ -1,15 +1,63 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.jpeggdev.matchingcoloredbrackets</id>
-    <name>matching-colored-brackets</name>
+    <name>Matching Colored Brackets</name>
     <vendor>jpeggdev</vendor>
 
+    <description><![CDATA[
+        <p>Free and open-source colored bracket matching plugin for IntelliJ IDEA.</p>
+        <p>Features:</p>
+        <ul>
+            <li>Colorizes matching brackets, parentheses, braces, and angle brackets (&lt;&gt;)</li>
+            <li>Supports unlimited nesting levels with cycling colors</li>
+            <li>Theme-aware colors (different colors for light and dark themes)</li>
+            <li>Automatic detection of bracket pairs</li>
+            <li>Works with all file types</li>
+            <li>Completely free and open-source with no premium features</li>
+        </ul>
+        <p>This plugin helps you quickly identify matching bracket pairs by assigning different colors to each nesting level, making it easier to read and navigate complex code structures.</p>
+    ]]></description>
+
+    <change-notes><![CDATA[
+        <h3>Version 0.0.1</h3>
+        <ul>
+            <li>Initial release</li>
+            <li>Support for (), [], {}, &lt;&gt; brackets</li>
+            <li>Theme-aware color palette</li>
+            <li>Automatic bracket detection and coloring</li>
+        </ul>
+    ]]></change-notes>
+
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.jpeggdev.matchingcoloredbrackets.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.jpeggdev.matchingcoloredbrackets.startup.MyProjectActivity" />
+        <!-- Register the bracket color service -->
+        <projectService
+                serviceImplementation="com.github.jpeggdev.matchingcoloredbrackets.services.BracketColorService"/>
+
+        <!-- Register the brackets annotator for all common languages -->
+        <annotator language="JAVA"
+                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
+        <annotator language="kotlin"
+                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
+        <annotator language="XML"
+                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
+        <annotator language="Python"
+                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
+        <annotator language="JavaScript"
+                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
+        <annotator language="TypeScript"
+                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
+        <annotator language="HTML"
+                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
+        <annotator language="CSS"
+                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
+
+        <!-- Startup activity for plugin initialization -->
+        <postStartupActivity
+                implementation="com.github.jpeggdev.matchingcoloredbrackets.startup.MatchingColoredBracketsStartupActivity"/>
     </extensions>
 </idea-plugin>
