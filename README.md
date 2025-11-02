@@ -1,29 +1,72 @@
-# matching-colored-brackets
+# Matching Colored Brackets
 
 ![Build](https://github.com/jpeggdev/matching-colored-brackets/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
 
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Get familiar with the [template documentation][template].
-- [ ] Adjust the [pluginGroup](./gradle.properties) and [pluginName](./gradle.properties), as well as the [id](./src/main/resources/META-INF/plugin.xml) and [sources package](./src/main/kotlin).
-- [ ] Adjust the plugin description in `README` (see [Tips][docs:plugin-description])
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `MARKETPLACE_ID` in the above README badges. You can obtain it once the plugin is published to JetBrains Marketplace.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
-- [ ] Configure the [CODECOV_TOKEN](https://docs.codecov.com/docs/quick-start) secret for automated test coverage reports on PRs
+A free and open-source IntelliJ IDEA plugin that colorizes matching brackets to improve code readability and navigation.
 
 <!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
 
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
+## Features
 
-To keep everything working, do not remove `<!-- ... -->` sections. 
+**Matching Colored Brackets** helps you quickly identify matching bracket pairs in your code by assigning different
+colors to each nesting level. This makes it easier to read and navigate complex code structures, especially in deeply
+nested code.
+
+### Key Features:
+
+- 🎨 **Colorful Bracket Matching** - Automatically colors matching brackets, parentheses, braces, and angle brackets
+- 🔄 **Unlimited Nesting Levels** - Supports any depth of nesting with cycling colors
+- 🌓 **Theme-Aware** - Different color palettes for light and dark themes
+- 📝 **Universal Support** - Works with all file types and programming languages
+- 🆓 **Completely Free** - No premium features or paywalls - everything is free and open-source
+- 🚀 **Lightweight** - Minimal performance impact with efficient bracket detection
+
+### Supported Bracket Types:
+
+- Parentheses: `( )`
+- Square brackets: `[ ]`
+- Curly braces: `{ }`
+- Angle brackets: `< >` (for generics and templates)
+
+### How It Works:
+
+The plugin automatically detects bracket pairs in your code and assigns colors based on their nesting depth. Each level
+gets a different color from a carefully chosen palette that ensures good visibility and contrast. The colors cycle
+through the palette for deeply nested structures.
+
 <!-- Plugin description end -->
+
+## Architecture
+
+The plugin is structured around three core components:
+
+### BracketColorService (`services/BracketColorService.kt`)
+
+A project-level service that manages bracket colors and provides utilities for bracket detection:
+
+- Maintains color palettes for light and dark themes
+- Provides color lookups based on nesting depth (cycling through palette for deep nesting)
+- Contains bracket matching logic and detection methods
+- Handles theme-aware color selection via `JBColor`
+
+### MatchingColoredBracketsAnnotator (`annotator/MatchingColoredBracketsAnnotator.kt`)
+
+The core annotation engine that applies colors to brackets in the editor:
+
+- Processes all elements in open files via PSI (Program Structure Interface)
+- Calculates bracket nesting depth by traversing the PSI tree
+- Skips brackets inside string literals and comments
+- Applies colored text attributes to matching bracket pairs
+- Special handling for angle brackets used in generics
+
+### MatchingColoredBracketsStartupActivity (`startup/MatchingColoredBracketsStartupActivity.kt`)
+
+Project initialization hook that ensures the plugin is ready when a project opens:
+
+- Initializes the `BracketColorService` on project startup
+- Provides logging for plugin initialization
 
 ## Installation
 
@@ -44,6 +87,53 @@ To keep everything working, do not remove `<!-- ... -->` sections.
   Download the [latest release](https://github.com/jpeggdev/matching-colored-brackets/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+## Project Structure
+
+```
+src/main/kotlin/com/github/jpeggdev/matchingcoloredbrackets/
+├── annotator/
+│   └── MatchingColoredBracketsAnnotator.kt      # Core bracket coloring logic
+├── services/
+│   └── BracketColorService.kt                   # Color management & bracket utilities
+└── startup/
+    └── MatchingColoredBracketsStartupActivity.kt # Project initialization
+```
+
+## Development
+
+### Building the Plugin
+
+```bash
+# Build the plugin distribution
+./gradlew buildPlugin
+
+# Run the plugin in a test IDE
+./gradlew runIde
+
+# Run tests
+./gradlew test
+
+# Full verification (tests + plugin compatibility check)
+./gradlew check
+```
+
+### Key Concepts
+
+- **Annotator Pattern**: The plugin uses IntelliJ's `Annotator` interface to process PSI elements and apply text
+  attributes for coloring
+- **PSI Tree Traversal**: Bracket depth is calculated by walking the PSI (Program Structure Interface) tree to count
+  nesting levels
+- **Theme Awareness**: Colors automatically adjust between light and dark themes using IntelliJ's `JBColor` API
+- **String/Comment Filtering**: The annotator intelligently skips brackets inside string literals and comments
+
+### Supported Brackets
+
+The plugin colors all standard bracket types with proper matching:
+
+- `( )` - Parentheses
+- `[ ]` - Square brackets
+- `{ }` - Curly braces
+- `< >` - Angle brackets (for generics and templates)
 
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].

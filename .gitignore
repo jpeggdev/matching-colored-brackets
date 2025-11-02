@@ -5,3 +5,7 @@
 .kotlin
 .qodana
 build
+
+# Environment variables for local development (contains sensitive credentials)
+.env
+.env.local
