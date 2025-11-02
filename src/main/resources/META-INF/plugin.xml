@@ -34,27 +34,8 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Register the bracket color service -->
-        <projectService
-                serviceImplementation="com.github.jpeggdev.matchingcoloredbrackets.services.BracketColorService"/>
-
-        <!-- Register the brackets annotator for all common languages -->
-        <annotator language="JAVA"
-                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
-        <annotator language="kotlin"
-                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
-        <annotator language="XML"
-                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
-        <annotator language="Python"
-                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
-        <annotator language="JavaScript"
-                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
-        <annotator language="TypeScript"
-                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
-        <annotator language="HTML"
-                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
-        <annotator language="CSS"
-                   implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
+        <!-- Register annotator for syntax highlighting -->
+        <annotator implementationClass="com.github.jpeggdev.matchingcoloredbrackets.annotator.MatchingColoredBracketsAnnotator"/>
 
         <!-- Startup activity for plugin initialization -->
         <postStartupActivity
